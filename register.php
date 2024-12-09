@@ -21,11 +21,12 @@ if (isset($_POST["register"])) {
     $regency = $_POST["regency"];
     $district = $_POST["district"];
     $address = $_POST["address"] ?? ''; // Tambahkan pemeriksaan agar tidak error jika belum ada nilai
-
+    $role_id = 1;
     $hash_password = hash("sha256", $password); // Hash password
 
     // Query untuk memasukkan data
-    $sql = "INSERT INTO users (username, password, email, phone, class, province, regency, district, address) VALUES ('$username', '$hash_password', '$email', '$phone', '$class', '$province', '$regency', '$district', '$address')";
+    $sql = "INSERT INTO users (username, password, email, phone, class, province, regency, district, address, role_id) 
+            VALUES ('$username', '$hash_password', '$email', '$phone', '$class', '$province', '$regency', '$district', '$address', $role_id)";
 
     try {
         // Eksekusi query

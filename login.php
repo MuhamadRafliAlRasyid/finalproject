@@ -26,10 +26,14 @@ if (isset($_POST['login'])) {
         $_SESSION['username'] = $username; // Simpan username dalam sesi
 
         // Redirect berdasarkan role
-        if ($role == 'admin') {
-            header('Location: admin/index.php');
+        if ($role =='admin') {
+            header('Location: admin\admin-dashboard.php'); // Dashboard admin
+        } elseif ($role == 'teacher') {
+            header('Location: guru\guru-dashboard.php'); // Dashboard teacher
+        } elseif ($role == 'student') {
+            header('Location: siswa\siswa-dashboard.php'); // Dashboard student
         } else {
-            header('Location: siswa/siswa-dashboard.php');
+            echo '<script>alert("Role tidak valid!");</script>';
         }
         exit;
     } else {

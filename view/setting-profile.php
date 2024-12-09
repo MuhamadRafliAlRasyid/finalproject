@@ -1,3 +1,16 @@
+<?php
+// Include file auth.php
+require_once '../session.php';
+
+// Periksa apakah sudah login
+checkLogin();
+
+// Periksa apakah pengguna memiliki role 'admin'
+checkRole(['admin']);
+
+// Jika lolos, tampilkan konten halaman admin
+echo "Selamat datang, Admin " . $_SESSION['username'];
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -29,7 +42,7 @@
 <section id="content">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
-            <span class="navbar-brand">Selamat Datang, "JANU ROHMANI!"</span>
+            <span class="navbar-brand">Selamat Datang, <?php echo htmlspecialchars($username); ?>!</span>
             <div class="ml-auto">
                 <a href="#" class="notification">
                     <i class='bx bxs-bell'></i>
