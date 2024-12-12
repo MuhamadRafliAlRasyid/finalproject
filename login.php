@@ -32,6 +32,8 @@ if (isset($_POST['login'])) {
             header('Location: guru\guru-dashboard.php'); // Dashboard teacher
         } elseif ($role == 'student') {
             header('Location: siswa\siswa-dashboard.php'); // Dashboard student
+        } elseif ($role == 'founder') {
+            header('Location: founder\founder-dashboard.php'); // Dashboard student
         } else {
             echo '<script>alert("Role tidak valid!");</script>';
         }

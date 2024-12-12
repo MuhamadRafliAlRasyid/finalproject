@@ -8,7 +8,7 @@ checkLogin();
 
 // Periksa apakah pengguna memiliki role 'admin'
 checkRole(['admin']);
-
+checkRole(['teacher']);
 // Jika lolos, tampilkan konten halaman admin
 echo "Selamat datang, Admin " . $_SESSION['username'];
 ?>
@@ -253,7 +253,7 @@ echo "Selamat datang, Admin " . $_SESSION['username'];
 		<!-- NAVBAR -->
 		<nav style="justify-content:flex-end">
     <div class="nav-right">
-        <span class="welcome-message">Selamat Datang, <?php echo htmlspecialchars($username); ?></span>
+        <span class="welcome-message">Selamat Datang, <?php echo htmlspecialchars($username); ?>!</span>
         <a href="#" class="notification">
             <i class='bx bxs-bell'></i>
             <span class="num">8</span>

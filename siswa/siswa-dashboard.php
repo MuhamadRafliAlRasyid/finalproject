@@ -1,9 +1,12 @@
 <?php
-session_start();
-if (!isset($_SESSION['username'])) {
-    header("Location: login.php"); // Redirect jika belum login
-    exit();
-}
+// Include file auth.php
+require_once '../session.php';
+
+// Periksa apakah sudah login
+checkLogin();
+
+checkRole(['student']);
+
 $username = $_SESSION['username'];
 ?>
 

@@ -1,3 +1,14 @@
+<?php
+// Include file auth.php
+require_once '../session.php';
+
+// Periksa apakah sudah login
+checkLogin();
+
+checkRole(['founder']);
+
+$username = $_SESSION['username'];
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>

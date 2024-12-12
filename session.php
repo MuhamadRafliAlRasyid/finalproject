@@ -26,10 +26,25 @@ function checkRole($allowed_roles = []) {
 
     // Periksa apakah role pengguna ada dalam daftar role yang diizinkan
     if (!in_array($_SESSION['role'], $allowed_roles)) {
-        // Jika role tidak sesuai, redirect ke halaman error atau dashboard
-        header("Location: unauthorized.php");
+        // Redirect ke halaman berdasarkan role
+        switch ($_SESSION['role']) {
+            case 'admin':
+                header('Location: \finalproject\admin\admin-dashboard.php');
+                break;
+            case 'student':
+                header('Location: \finalproject\siswa\siswa-dashboard.php');
+                break;
+            case 'teacher':
+                header('Location: \finalproject\guru\guru-dashboard.php');
+                break;
+            case 'founder':
+                header('Location: \finalproject\founder\founder-dashboard.php');
+                break;
+            default:
+                header("Location: error.php"); // Jika role tidak dikenal
+        }
         exit();
-    }
+    }       
 }
 
 // Fungsi untuk memulai session (jika diperlukan)
