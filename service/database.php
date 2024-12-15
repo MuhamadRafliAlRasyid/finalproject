@@ -4,7 +4,7 @@
 define("DB_HOST", "localhost");
 define("DB_USER", "root");
 define("DB_PASS", "");
-define("DB_NAME", "bimbel_db");
+define("DB_NAME", "bimbel_db1");
 
 try {
     // Aktifkan laporan error selama pengembangan (nonaktifkan di produksi)
