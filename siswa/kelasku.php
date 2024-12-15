@@ -1,3 +1,39 @@
+<?php 
+require_once '../service/database.php';
+
+// Include file session.php
+require_once '../session.php';
+
+// Periksa login
+checkLogin();
+
+// Debug koneksi database
+if (!isset($db)) {
+    die("Variabel \$db tidak tersedia. Pastikan file database.php sudah di-*include* dengan benar.");
+}
+
+// Query data materi
+$sql = "SELECT * FROM materi";
+$result = $db->query($sql);
+
+if (!$result) {
+    die("Gagal mengambil data: " . $db->error);
+}
+
+$materi_data = [];
+if ($result && $result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $materi_data[] = $row;
+    }
+}
+$pengenalan = array_filter($materi_data, function($item) {
+    return strtolower($item['kategori']) === 'pengenalan';
+});
+
+$pertemuan = array_filter($materi_data, function($item) {
+    return strtolower($item['kategori']) === 'pertemuan';
+});
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -242,54 +278,47 @@
                 </div>
                 
                 <!-- Accordion for Course Content -->
+                <!-- Pengenalan -->
+                <h2>Pengenalan</h2>
                 <div class="accordion">
-                    <div class="accordion-item">
-                        <div class="accordion-header">
-                            <h3>Pengenalan</h3>
-                            <i class='bx bx-chevron-down'></i>
+                    <?php foreach ($pengenalan as $materi): ?>
+                        <div class="accordion-item">
+                            <div class="accordion-header">
+                                <h3><?= htmlspecialchars($materi['title']) ?></h3>
+                                <i class='bx bx-chevron-down'></i>
+                            </div>
+                            <div class="accordion-content">
+                                <p><?= nl2br(htmlspecialchars($materi['content'])) ?></p>
+                                <p><?php if (!empty($materi['file_url'])): ?>
+                                <a href="../uploads/<?= htmlspecialchars($materi['file_url']) ?>" target="_blank"><?= htmlspecialchars($materi['file_url']) ?></a>
+                            <?php else: ?>
+                                Tidak ada file
+                            <?php endif; ?></p>
+                            </div>
                         </div>
-                        <div class="accordion-content">
-                            <p>Details about the introduction to the course.</p>
-                        </div>
-                    </div>
-                    <div class="accordion-item">
-                        <div class="accordion-header">
-                            <h3>Pertemuan 1</h3>
-                            <i class='bx bx-chevron-down'></i>
-                        </div>
-                        <div class="accordion-content">
-                            <p>Details about the course materials.</p>
-                        </div>
-                    </div>
-                    <div class="accordion-item">
-                        <div class="accordion-header">
-                            <h3>pertemuan 2</h3>
-                            <i class='bx bx-chevron-down'></i>
-                        </div>
-                        <div class="accordion-content">
-                            <p>Details about the modules covered in the course.</p>
-                        </div>
-                    </div>
-                    <div class="accordion-item">
-                        <div class="accordion-header">
-                            <h3>Pertemuan 3</h3>
-                            <i class='bx bx-chevron-down'></i>
-                        </div>
-                        <div class="accordion-content">
-                            <p>Details about attendance in theory classes.</p>
-                        </div>
-                    </div>
-                    <div class="accordion-item">
-                        <div class="accordion-header">
-                            <h3>Pertemuan 4</h3>
-                            <i class='bx bx-chevron-down'></i>
-                        </div>
-                        <div class="accordion-content">
-                            <p>Details about attendance in practical classes.</p>
-                        </div>
-                    </div>
+                    <?php endforeach; ?>
                 </div>
-            </div>
+
+                <!-- Pertemuan -->
+                <h2>Pertemuan</h2>
+                <div class="accordion">
+                    <?php foreach ($pertemuan as $materi): ?>
+                        <div class="accordion-item">
+                            <div class="accordion-header">
+                                <h3><?= htmlspecialchars($materi['title']) ?></h3>
+                                <i class='bx bx-chevron-down'></i>
+                            </div>
+                            <div class="accordion-content">
+                                <p><?= nl2br(htmlspecialchars($materi['content'])) ?></p>
+                                <p><?php if (!empty($materi['file_url'])): ?>
+                                <a href="../uploads/<?= htmlspecialchars($materi['file_url']) ?>" target="_blank"><?= htmlspecialchars($materi['file_url']) ?></a>
+                            <?php else: ?>
+                                Tidak ada file
+                            <?php endif; ?></p>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
         </div>
     </main>
 </section>

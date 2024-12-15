@@ -133,6 +133,12 @@ $username = $_SESSION['username'];
 			</a>
 		</li>
         <li>
+			<a href="../view/materi.php">
+				<i class='bx bxs-school'></i>
+				<span class="text">Manajemen Materi siswa</span>
+			</a>
+		</li>
+        <li>
 			<a href="../view/jadwal-kelas.php">
 				<i class='bx bxs-school'></i>
 				<span class="text">Manajemen kehadiran siswa</span>

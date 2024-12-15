@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 15, 2024 at 04:39 AM
+-- Generation Time: Dec 15, 2024 at 07:04 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -77,16 +77,18 @@ CREATE TABLE `materi` (
   `title` varchar(255) NOT NULL,
   `content` text NOT NULL,
   `file_url` varchar(255) DEFAULT NULL,
-  `date_created` timestamp NOT NULL DEFAULT current_timestamp()
+  `date_created` timestamp NOT NULL DEFAULT current_timestamp(),
+  `kategori` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `materi`
 --
 
-INSERT INTO `materi` (`id`, `course_id`, `title`, `content`, `file_url`, `date_created`) VALUES
-(1, 232, 'ASDASD', 'ASDDASSAD', 'Algoritma dan Metode Pencarian Data.pdf', '2024-12-14 14:15:45'),
-(2, 213312, 'asdas', 'adsda', 'Algoritma dan Metode Pencarian Data.pdf', '2024-12-14 14:17:58');
+INSERT INTO `materi` (`id`, `course_id`, `title`, `content`, `file_url`, `date_created`, `kategori`) VALUES
+(1, 232, 'ASDASD', 'ASDDASSAD', 'Algoritma dan Metode Pencarian Data.pdf', '2024-12-14 14:15:45', 'pengenalan'),
+(2, 213312, 'asdas', 'adsda', 'Algoritma dan Metode Pencarian Data.pdf', '2024-12-14 14:17:58', 'pertemuan'),
+(3, 2, 'saadas', 'sadas', 'Algoritma dan Metode Pencarian Data.pdf', '2024-12-15 05:35:22', 'pertemuan');
 
 -- --------------------------------------------------------
 
@@ -290,7 +292,7 @@ ALTER TABLE `financial_reports`
 -- AUTO_INCREMENT for table `materi`
 --
 ALTER TABLE `materi`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `payments`
