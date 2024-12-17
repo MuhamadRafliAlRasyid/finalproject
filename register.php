@@ -3,7 +3,10 @@ include "service/database.php";
 session_start();
 
 $register_message = "";
-
+if (!isset($_SESSION['selected_paket'])) {
+    header("Location: paketbelajar1.php");
+    exit();
+}
 // Redirect jika sudah login
 if (isset($_SESSION["is_login"])) {
     header("location: dashboard.php");

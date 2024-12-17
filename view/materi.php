@@ -312,7 +312,7 @@ if (!$result) {
                         <td><?= htmlspecialchars($row['content']) ?></td>
                         <td>
                             <?php if (!empty($row['file_url'])): ?>
-                                <a href="../uploads/<?= htmlspecialchars($row['file_url']) ?>" target="_blank">Lihat File</a>
+                                <a href="../uploads/materi/<?= htmlspecialchars($row['file_url']) ?>" target="_blank">Lihat File</a>
                             <?php else: ?>
                                 Tidak ada file
                             <?php endif; ?>

@@ -54,4 +54,24 @@ function startSession($username, $role) {
     $_SESSION['log'] = 'logged';
 }
 
+// Simpan data paket belajar ke session
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $package_id = $_POST['package_id']; // ID paket belajar dari form
+    $start_month = $_POST['bulan'];     // Bulan mulai belajar
+    $start_year = $_POST['tahun'];      // Tahun mulai belajar
+    $duration = $_POST['lama'];         // Lama belajar (bulan)
+
+    // Simpan ke session
+    $_SESSION['selected_package'] = [
+        'package_id' => $package_id,
+        'start_month' => $start_month,
+        'start_year' => $start_year,
+        'duration' => $duration
+    ];
+
+    // Redirect ke halaman login/register
+    header("Location: register.php");
+    exit();
+}
+
 ?>

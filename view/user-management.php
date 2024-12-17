@@ -1,12 +1,16 @@
 <?php
 // Include file auth.php
 require_once '../session.php';
-
+include "../service/database.php";
 // Periksa apakah sudah login
 checkLogin();
 
 // Periksa apakah pengguna memiliki role 'admin'
 checkRole(['admin']);
+$sql = "SELECT u.id, u.username AS nama, u.email, r.role AS role
+        FROM users u
+        JOIN users_role r ON u.role_id = r.id  WHERE u.role_id =2";
+$result = mysqli_query($db, $sql); // Eksekusi query
 
 // Jika lolos, tampilkan konten halaman admin
 echo "Selamat datang, Admin " . $_SESSION['username'];
@@ -283,6 +287,7 @@ echo "Selamat datang, Admin " . $_SESSION['username'];
                 <div class="search-container">
                     <input type="text" id="search-input" placeholder="Cari...">
                     <button id="search-button"><i class='bx bx-search'></i></button>
+                    <a href="register_guru.php"><button class="btn btn-primary" id="addMaterialBtn">+ Tambah Akun</button></a>
                 </div>
             </div>
             <table>
@@ -296,37 +301,26 @@ echo "Selamat datang, Admin " . $_SESSION['username'];
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>    
-                        <td>1</td>
-                        <td>John Doe</td>    
-                        <td>9Ht0J@example.com</td>
-                        <td>Admin</td>
-                        <td>
-                            <button class="edit-button"><i class='bx bxs-edit'></i></button>
-                            <button class="delete-button"><i class='bx bxs-trash'></i></button>
-                        </td>
-                    </tr>
-                    <tr>    
-                        <td>2</td>
-                        <td>John Doe</td>    
-                        <td>9Ht0J@example.com</td>
-                        <td>Admin</td>
-                        <td>
-                            <button class="edit-button"><i class='bx bxs-edit'></i></button>
-                            <button class="delete-button"><i class='bx bxs-trash'></i></button>
-                        </td>
-                    </tr>
-                    <tr>    
-                        <td>3</td>
-                        <td>John Doe</td>    
-                        <td>9Ht0J@example.com</td>
-                        <td>Admin</td>
-                        <td>
-                            <button class="edit-button"><i class='bx bxs-edit'></i></button>
-                            <button class="delete-button"><i class='bx bxs-trash'></i></button>
-                        </td>
-                    </tr>
-                </tbody>
+                <?php 
+            if ($result && mysqli_num_rows($result) > 0) {
+                $no = 1;
+                while ($row = mysqli_fetch_assoc($result)) {
+                    echo "<tr>";
+                    echo "<td>" . $no++ . "</td>";
+                    echo "<td>" . htmlspecialchars($row['nama']) . "</td>";
+                    echo "<td>" . htmlspecialchars($row['email']) . "</td>";
+                    echo "<td>" . htmlspecialchars($row['role']) . "</td>";
+                    echo "<td>
+                            <button class='btn btn-warning btn-sm edit-button'><i class='bx bxs-edit'></i></button>
+                            <button class='btn btn-danger btn-sm delete-button'><i class='bx bxs-trash'></i></button>
+                          </td>";
+                    echo "</tr>";
+                }
+            } else {
+                echo "<tr><td colspan='5' class='text-center'>Tidak ada data</td></tr>";
+            }
+            ?>
+        </tbody>
 
 </body>
 </html>

@@ -290,7 +290,7 @@ $pertemuan = array_filter($materi_data, function($item) {
                             <div class="accordion-content">
                                 <p><?= nl2br(htmlspecialchars($materi['content'])) ?></p>
                                 <p><?php if (!empty($materi['file_url'])): ?>
-                                <a href="../uploads/<?= htmlspecialchars($materi['file_url']) ?>" target="_blank"><?= htmlspecialchars($materi['file_url']) ?></a>
+                                <a href="../uploads/materi/<?= htmlspecialchars($materi['file_url']) ?>" target="_blank"><?= htmlspecialchars($materi['file_url']) ?></a>
                             <?php else: ?>
                                 Tidak ada file
                             <?php endif; ?></p>
@@ -311,7 +311,7 @@ $pertemuan = array_filter($materi_data, function($item) {
                             <div class="accordion-content">
                                 <p><?= nl2br(htmlspecialchars($materi['content'])) ?></p>
                                 <p><?php if (!empty($materi['file_url'])): ?>
-                                <a href="../uploads/<?= htmlspecialchars($materi['file_url']) ?>" target="_blank"><?= htmlspecialchars($materi['file_url']) ?></a>
+                                <a href="../uploads/materi/<?= htmlspecialchars($materi['file_url']) ?>" target="_blank"><?= htmlspecialchars($materi['file_url']) ?></a>
                             <?php else: ?>
                                 Tidak ada file
                             <?php endif; ?></p>

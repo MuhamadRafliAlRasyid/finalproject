@@ -1,8 +1,3 @@
-<?php
-// Start the session
-session_start();
-?>
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -17,40 +12,40 @@ session_start();
 <body>
     
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light py-0" style="box-shadow: none;">
-    <div class="container">
-        <a class="navbar-brand" href="#">
-            <img src=".\img\BIMBELRAHMA.png" alt="Bimbel Rahma Logo" width="300" height="1500"> <!-- Increased width and height -->
-        </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item"><a class="nav-link px-3" href="index.php">Beranda</a></li>
-                <li class="nav-item"><a class="nav-link px-3" href="tentangkami.php">Tentang Kami</a></li>
-                <li class="nav-item"><a class="nav-link px-3" href="paketbelajar.php">Paket Belajar</a></li>
-                <li class="nav-item"><a class="nav-link px-3" href="kontak.php">Kontak</a></li>
-                <li class="nav-item"><a class="nav-link btn btn-primary text-white ml-3 px-4" href="login.php">Masuk</a></li>
-                <li class="nav-item"><a class="nav-link btn btn-primary text-white ml-3 px-4" href="register.php">Daftar Sekarang</a></li>
-            </ul>
+    <nav class="navbar navbar-expand-lg navbar-light bg-transparent sticky-top"> <!-- Added sticky-top class -->
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <img src=".\img\BIMBELRAHMA.png" alt="Bimbel Rahma Logo" width="300" height="1500"> <!-- Increased width and height -->
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item"><a class="nav-link px-3" href="index.php">Beranda</a></li>
+                    <li class="nav-item"><a class="nav-link px-3" href="tentangkami.php">Tentang Kami</a></li>
+                    <li class="nav-item"><a class="nav-link px-3" href="paketbelajar.php">Paket Belajar</a></li>
+                    <li class="nav-item"><a class="nav-link px-3" href="kontak.php">Kontak</a></li>
+                    <li class="nav-item"><a class="nav-link btn btn-primary text-white ml-3 px-4" href="login.php">Masuk</a></li>
+                    <li class="nav-item"><a class="nav-link btn btn-primary text-white ml-3 px-4" href="paketbelajar.php">Daftar Sekarang</a></li>
+                </ul>
+            </div>
         </div>
-    </div>
-</nav>
+    </nav>
 
-<script>
-    // Menandai nav-item aktif berdasarkan URL saat ini
-    document.addEventListener("DOMContentLoaded", function () {
-        const navLinks = document.querySelectorAll(".nav-link");
-        const currentUrl = window.location.href;
+    <script>
+        // Menandai nav-item aktif berdasarkan URL saat ini
+        document.addEventListener("DOMContentLoaded", function () {
+            const navLinks = document.querySelectorAll(".nav-link");
+            const currentUrl = window.location.href;
 
-        navLinks.forEach(link => {
-            if (link.href === currentUrl) {
-                link.classList.add("active");
-            }
+            navLinks.forEach(link => {
+                if (link.href === currentUrl) {
+                    link.classList.add("active");
+                }
+            });
         });
-    });
-</script>
+    </script>
 
     <div class="divider"></div>
     <!--carousel-->
@@ -63,14 +58,14 @@ session_start();
         <div class="carousel-inner">
             <div class="carousel-item active">
                 <a href="daftar.php">
-                    <img src=".\img\BIMBEL RAHMA (1920 x 600 px) (4).png" class="d-block w-100" alt="Image 1" style="width: 100%; height: 400px; ">
+                    <img src=".\img\BIMBEL RAHMA (1920 x 600 px) (4).png" class="d-block w-100" alt="Image 1" >
                 </a>
             </div>
             <div class="carousel-item">
-                <img src=".\img\BIMBEL RAHMA (1920 x 600 px) (4).png" class="d-block w-100" alt="Image 2" style="width: 100%; height: 400px;">
+                <img src=".\img\konten2.png" class="d-block w-100" alt="Image 2">
             </div>
             <div class="carousel-item">
-                <img src=".\img\BIMBEL RAHMA (1920 x 600 px) (4).png" class="d-block w-100" alt="Image 3" style="width: 100%; height: 400px;">
+                <img src=".\img\konten3.png" class="d-block w-100" alt="Image 3" >
             </div>
         </div>
         <a class="carousel-control-prev" href="#geser" role="button" data-slide="prev">
@@ -172,43 +167,125 @@ session_start();
         </div>
     </section>
 
-    <!-- Testimonial Section -->
-    <section class="testimonial">
-        <div class="container">
-            <h2 class="text-center mb-5">Apa Kata Mereka?</h2>
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="card">
-                        <img src="img/unknown-profile.png" class="card-img-top" alt="Foto Andi">
-                        <div class="card-body">
-                            <p class="card-text">"Bimbel Rahma sangat membantu saya dalam mempersiapkan ujian. Saya berhasil masuk ke universitas impian saya!"</p>
-                            <footer class="blockquote-footer">Andi, Siswa SMA</footer>
+   <!-- Pengajar Carousel Section -->
+<section class="pengajar-carousel">
+    <div class="container">
+        <h2 class="text-center mb-5">Mengenal Pengajar di Bimbel Rahma</h2>
+        <div id="pengajarCarousel" class="carousel slide" data-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <img src="img/1.jpg" class="d-block mx-auto" style="width: 100%; height: auto;" alt="Foto Pengajar A">
+                        </div>
+                        <div class="col-md-6">
+                            <img src="img/2.jpg" class="d-block mx-auto" style="width: 100%; height: auto;" alt="Foto Pengajar B">
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="card">
-                        <img src="img/unknown-profile.png" class="card-img-top" alt="Foto Ibu Siti">
-                        <div class="card-body">
-                            <p class="card-text">"Pengajarnya sangat sabar dan metode belajarnya menyenangkan. Anak saya jadi lebih semangat belajar."</p>
-                            <footer class="blockquote-footer">Ibu Siti, Orang Tua Siswa</footer>
+                <div class="carousel-item">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <img src="img/3.jpg" class="d-block mx-auto" style="width: 100%; height: auto;" alt="Foto Pengajar C">
+                        </div>
+                        <div class="col-md-6">
+                            <img src="img/4.jpg" class="d-block mx-auto" style="width: 100%; height: auto;" alt="Foto Pengajar D">
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="card">
-                        <img src="img/unknown-profile.png" class="card-img-top" alt="Foto Budi">
-                        <div class="card-body">
-                            <p class="card-text">"Fasilitas lengkap dan suasana belajar yang nyaman. Sangat direkomendasikan!"</p>
-                            <footer class="blockquote-footer">Budi, Siswa SMP</footer>
+                <div class="carousel-item">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <img src="img/5.jpg" class="d-block mx-auto" style="width: 100%; height: auto;" alt="Foto Pengajar E">
+                        </div>
+                        <div class="col-md-6">
+                            <img src="img/6.jpg" class="d-block mx-auto" style="width: 100%; height: auto;" alt="Foto Pengajar F">
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <img src="img/7.jpg" class="d-block mx-auto" style="width: 100%; height: auto;" alt="Foto Pengajar G">
+                        </div>
+                        <div class="col-md-6">
+                            <img src="img/8.jpg" class="d-block mx-auto" style="width: 100%; height: auto;" alt="Foto Pengajar H">
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <img src="img/9.jpg" class="d-block mx-auto" style="width: 100%; height: auto;" alt="Foto Pengajar I">
+                        </div>
+                        <div class="col-md-6">
+                            <img src="img/10.jpg" class="d-block mx-auto" style="width: 100%; height: auto;" alt="Foto Pengajar J">
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <img src="img/11.jpg" class="d-block mx-auto" style="width: 100%; height: auto;" alt="Foto Pengajar K">
+                        </div>
+                        <div class="col-md-6">
+                            <img src="img/12.jpg" class="d-block mx-auto" style="width: 100%; height: auto;" alt="Foto Pengajar L">
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <img src="img/13.jpg" class="d-block mx-auto" style="width: 100%; height: auto;" alt="Foto Pengajar M">
+                        </div>
+                        <div class="col-md-6">
+                            <img src="img/14.jpg" class="d-block mx-auto" style="width: 100%; height: auto;" alt="Foto Pengajar N">
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <img src="img/15.jpg" class="d-block mx-auto" style="width: 100%; height: auto;" alt="Foto Pengajar O">
+                        </div>
+                        <div class="col-md-6">
+                            <img src="img/16.jpg" class="d-block mx-auto" style="width: 100%; height: auto;" alt="Foto Pengajar P">
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <img src="img/17.jpg" class="d-block mx-auto" style="width: 100%; height: auto;" alt="Foto Pengajar Q">
+                        </div>
+                        <div class="col-md-6">
+                            <img src="img/18.jpg" class="d-block mx-auto" style="width: 100%; height: auto;" alt="Foto Pengajar R">
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <img src="img/19.jpg" class="d-block mx-auto" style="width: 100%; height: auto;" alt="Foto Pengajar S">
+                        </div>
+                        <div class="col-md-6">
+                            <img src="img/20.jpg" class="d-block mx-auto" style="width: 100%; height: auto;" alt="Foto Pengajar T">
                         </div>
                     </div>
                 </div>
             </div>
+            <a class="carousel-control-prev" href="#pengajarCarousel" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Sebelumnya</span>
+            </a>
+            <a class="carousel-control-next" href="#pengajarCarousel" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Selanjutnya</span>
+            </a>
         </div>
-    </section>
-
-   <!-- Footer -->
+    </div>
+</section>
+<!-- Footer -->
    <footer class="footer">
         <div class="container">
             <div class="row">
