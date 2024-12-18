@@ -1,5 +1,43 @@
 <?php
-session_start();
+require_once 'session.php';
+include "service/database.php";
+
+// Simulasi session user_id
+$user_id = $_SESSION['user_id'] ?? 1; // Default user_id jika session kosong
+
+// Tetapkan package_id ke 1
+$package_id = 3;
+
+// Proses form jika disubmit
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $bulan = $_POST['bulan'];         // start_month
+    $tahun = $_POST['tahun'];         // start_year
+    $lama = $_POST['lama'];           // duration
+    $tingkat = $_POST['tingkat'];     // tingkat
+    $kelas = $_POST['kelas'];         // class
+    $kurikulum = $_POST['kurikulum']; // kurikulum
+
+    // Perhitungan total harga
+    $price_per_month = 500000;
+    $registration_fee = 200000;
+    $total_harga = ($price_per_month * $lama) + $registration_fee;
+
+    // Insert data ke database
+    $query = "INSERT INTO registrations 
+        (user_id, package_id, class, tingkat, kurikulum, start_month, start_year, duration, total_harga) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $stmt = $db->prepare($query);
+    $stmt->bind_param("iiiisssis", 
+        $user_id, $package_id, $kelas, $tingkat, $kurikulum, $bulan, $tahun, $lama, $total_harga);
+
+    if ($stmt->execute()) {
+        echo "<script>alert('Data berhasil disimpan!'); window.location.href='paketbelajar1.php';</script>";
+    } else {
+        echo "<script>alert('Gagal menyimpan data: " . $stmt->error . "');</script>";
+    }
+    $stmt->close();
+    $db->close();
+}
 ?>
 <!DOCTYPE html>
 <html lang="id">

@@ -4,11 +4,7 @@ session_start();
 
 $register_message = "";
 
-// Redirect jika belum memilih paket
-if (!isset($_SESSION['selected_paket'])) {
-    header("Location: paketbelajar.php");
-    exit();
-}
+
 
 // Redirect jika sudah login
 if (isset($_SESSION["is_login"])) {
@@ -26,13 +22,14 @@ if (isset($_POST["register"])) {
     $province = $_POST["province"];
     $regency = $_POST["regency"];
     $district = $_POST["district"];
-    $address = $_POST["address"] ?? ''; // Pemeriksaan agar tidak error jika kosong
+    $address = $_POST["address"] ?? ''; 
+    $is_active = 0; // Pemeriksaan agar tidak error jika kosong
     $role_id = 1;
     $hash_password = hash("sha256", $password); // Hash password
 
     // Query untuk memasukkan data
-    $sql = "INSERT INTO users (username, password, email, phone, class, province, regency, district, address, role_id) 
-            VALUES ('$username', '$hash_password', '$email', '$phone', '$class', '$province', '$regency', '$district', '$address', $role_id)";
+    $sql = "INSERT INTO users (username, password, email, phone, province, regency, district, address, is_active, role_id) 
+            VALUES ('$username', '$hash_password', '$email', '$phone', '$province', '$regency', '$district', '$address', '$is_active', '$role_id')";
 
     try {
         // Eksekusi query
@@ -46,8 +43,8 @@ if (isset($_POST["register"])) {
             $_SESSION["is_login"] = true; // Menandakan user sudah login
 
             // Redirect ke halaman pembayaran
-            header("Location: pembayaran.php");
-            exit();
+            header("Location: paketbelajar.php");
+            
         }
     } catch (mysqli_sql_exception $e) {
         // Menangani kesalahan duplikasi username

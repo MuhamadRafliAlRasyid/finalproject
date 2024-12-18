@@ -1,35 +1,46 @@
 <?php
-include "service/database.php"; // Pastikan koneksi database benar
-session_start();
+require_once 'session.php';
+include "service/database.php";
 
+// Simulasi session user_id
+$user_id = $_SESSION['user_id'] ?? 1; // Default user_id jika session kosong
+
+// Tetapkan package_id ke 1
+$package_id = 1;
+
+// Proses form jika disubmit
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $bulan = $_POST['bulan'];
-    $tahun = $_POST['tahun'];
-    $lama = $_POST['lama'];
-    $tingkat = $_POST['tingkat'];
-    $kelas = $_POST['kelas'];
-    $kurikulum = $_POST['kurikulum'];
-    
+    $bulan = $_POST['bulan'];         // start_month
+    $tahun = $_POST['tahun'];         // start_year
+    $lama = $_POST['lama'];           // duration
+    $tingkat = $_POST['tingkat'];     // tingkat
+    $kelas = $_POST['kelas'];         // class
+    $kurikulum = $_POST['kurikulum']; // kurikulum
 
+    // Perhitungan total harga
+    $price_per_month = 500000;
+    $registration_fee = 200000;
+    $total_harga = ($price_per_month * $lama) + $registration_fee;
 
-    // Hitung total harga
-    $biayaPaket = 500000; // Harga paket per bulan
-    $lamaBelajar = (int)$lama; // Lama belajar dalam bulan
-    $biayaRegistrasi = 200000; // Biaya registrasi
-    $totalHarga = ($biayaPaket * $lamaBelajar) + $biayaRegistrasi;
+    // Insert data ke database
+    $query = "INSERT INTO registrations 
+        (user_id, package_id, class, tingkat, kurikulum, start_month, start_year, duration, total_harga) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $stmt = $db->prepare($query);
+    $stmt->bind_param("iiiisssis", 
+        $user_id, $package_id, $kelas, $tingkat, $kurikulum, $bulan, $tahun, $lama, $total_harga);
 
-    // Query untuk menyimpan data ke database
-    $sql = "INSERT INTO paket 
-            (bulan_mulai, tahun_mulai, lama_belajar, tingkat_pendidikan, kelas, kurikulum, total_harga) 
-            VALUES ('$bulan', '$tahun', '$lama', '$tingkat', '$kelas', '$kurikulum', '$totalHarga')";
-
-    if ($conn->query($sql) === TRUE) {
-        echo "Data berhasil disimpan!";
+    if ($stmt->execute()) {
+        echo "<script>alert('Data berhasil disimpan!'); window.location.href='paketbelajar1.php';</script>";
     } else {
-        echo "Error: " . $sql . "<br>" . $conn->error;
+        echo "<script>alert('Gagal menyimpan data: " . $stmt->error . "');</script>";
     }
+    $stmt->close();
+    $db->close();
 }
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="id">
@@ -59,12 +70,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ml-auto">
-                    <li class="nav-item"><a class="nav-link px-3" href="index.php">Beranda</a></li>
+                    <li class="nav-item"><a class="nav-link px-3" href="index.php">Beranda </a></li>
                     <li class="nav-item"><a class="nav-link px-3" href="tentangkami.php">Tentang Kami</a></li>
                     <li class="nav-item"><a class="nav-link px-3" href="paketbelajar.php">Paket Belajar</a></li>
                     <li class="nav-item"><a class="nav-link px-3" href="kontak.php">Kontak</a></li>
-                    <li class="nav-item"><a class="nav-link btn btn-primary text-white ml-3 px-4" href="login.php">Masuk</a></li>
-                    <li class="nav-item"><a class="nav-link btn btn-primary text-white ml-3 px-4" href="paketbelajar.php">Daftar Sekarang</a></li>
                 </ul>
             </div>
         </div>
@@ -104,6 +113,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <li class="list-group-item">Materi pelajaran sekolah</li>
                             <li class="list-group-item">Tutor berpengalaman</li>
                             <li class="list-group-item">Kelas offline</li>
+                            <li class="list-group-item" style ="color: white" ><?php echo htmlspecialchars($user_id); ?></li>
                         </ul>
                     </div>
                 </div>
@@ -116,7 +126,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <h3 class="text-center" style="color: black;">Form Pilihan</h3>
                     </div>
                     <div class="package-body">
-                        <form id="paymentForm" action="kirim1.php" method="post">
+                        <form method="POST" action="">
                             <div class="form-group">
                                 <label for="bulan">Bulan Mulai</label>
                                 <select name="bulan" id="bulan" class="form-control" required>

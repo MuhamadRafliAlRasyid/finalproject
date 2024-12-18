@@ -1,3 +1,9 @@
+<?php
+require_once '../session.php';
+
+// Tampilkan data pengguna
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -133,6 +139,12 @@
                 <span class="text">Report</span>
             </a>
         </li>
+        <li>
+            <a href="../paketbelajar.php">
+                <i class='bx bxs-group'></i>
+                <span class="text">paket belajar</span>
+            </a>
+        </li>
     </ul>
     <ul class="side-menu top">
         <li>
@@ -182,7 +194,7 @@
     <!-- NAVBAR -->
     <nav style="justify-content:flex-end">
         <div class="nav-right">
-            <span class="welcome-message">Selamat Datang, "JANU ROHMANI!"</span>
+            <span class="welcome-message">Selamat Datang, <?php echo htmlspecialchars($user_id); ?>!"</span>
             <a href="#" class="notification">
                 <i class='bx bxs-bell'></i>
                 <span class="num">8</span>

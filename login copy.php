@@ -1,7 +1,7 @@
 <?php
-include "service/database.php";
-session_start(); // Pastikan session dimulai
 
+include "service/database.php";
+ // Memulai sesi
 if (isset($_POST['login'])) {
     // Ambil input pengguna
     $username = mysqli_real_escape_string($db, $_POST['username']);
@@ -17,42 +17,34 @@ if (isset($_POST['login'])) {
     $hitung = mysqli_num_rows($cekuser);
 
     if ($hitung > 0) {
-        // Ambil semua data pengguna
-        $datauser = mysqli_fetch_assoc($cekuser);
-        
-        // Simpan data user ke dalam session
-        $_SESSION['user_id'] = $datauser['id']; // ID user
-        $_SESSION['username'] = $datauser['username']; // Username
-        $_SESSION['email'] = $datauser['email']; // Email (jika ada)
-        $_SESSION['role'] = $datauser['role']; // Role user
-        $_SESSION['log'] = 'logged'; // Status login
+        $ambildatarole = mysqli_fetch_assoc($cekuser);
+        $role = $ambildatarole['role'];
+        $username = $ambildatarole['username']; // Ambil username
+
+        // Atur sesi
+        $_SESSION['user_id'] = $user_id;
+        $_SESSION['log'] = 'logged';
+        $_SESSION['role'] = $role;
+        $_SESSION['username'] = $username; // Simpan username dalam sesi
 
         // Redirect berdasarkan role
-        switch ($datauser['role']) {
-            case 'admin':
-                header('Location: admin/admin-dashboard.php');
-                break;
-            case 'teacher':
-                header('Location: guru/guru-dashboard.php');
-                break;
-            case 'student':
-                header('Location: siswa/siswa-dashboard.php');
-                break;
-            case 'founder':
-                header('Location: founder/founder-dashboard.php');
-                break;
-            default:
-                echo '<script>alert("Role tidak valid!");</script>';
-                exit;
+        if ($role =='admin') {
+            header('Location: admin\admin-dashboard.php'); // Dashboard admin
+        } elseif ($role == 'teacher') {
+            header('Location: guru\guru-dashboard.php'); // Dashboard teacher
+        } elseif ($role == 'student') {
+            header('Location: siswa\siswa-dashboard.php'); // Dashboard student
+        } elseif ($role == 'founder') {
+            header('Location: founder\founder-dashboard.php'); // Dashboard student
+        } else {
+            echo '<script>alert("Role tidak valid!");</script>';
         }
         exit;
     } else {
-        // Jika login gagal
         echo '<script>alert("Username atau password salah!");</script>';
     }
 }
 ?>
-
 
 
 
