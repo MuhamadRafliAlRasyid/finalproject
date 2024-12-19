@@ -24,10 +24,9 @@
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item"><a class="nav-link px-3" href="index.php">Beranda</a></li>
                     <li class="nav-item"><a class="nav-link px-3" href="tentangkami.php">Tentang Kami</a></li>
-                    <li class="nav-item"><a class="nav-link px-3" href="paketbelajar.php">Paket Belajar</a></li>
                     <li class="nav-item"><a class="nav-link px-3" href="kontak.php">Kontak</a></li>
+                    <li class="nav-item"><a class="nav-link btn btn-primary text-white ml-3 px-4" href="register.php">daftar</a></li>
                     <li class="nav-item"><a class="nav-link btn btn-primary text-white ml-3 px-4" href="login.php">Masuk</a></li>
-                    <li class="nav-item"><a class="nav-link btn btn-primary text-white ml-3 px-4" href="paketbelajar.php">Daftar Sekarang</a></li>
                 </ul>
             </div>
         </div>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 18, 2024 at 05:52 PM
+-- Generation Time: Dec 19, 2024 at 05:14 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -170,9 +170,25 @@ CREATE TABLE `payments` (
   `student_id` int(11) DEFAULT NULL,
   `amount` decimal(15,2) DEFAULT NULL,
   `payment_date` timestamp NOT NULL DEFAULT current_timestamp(),
+  `file` varchar(255) NOT NULL,
   `description` text DEFAULT NULL,
-  `status` enum('pending','completed','failed') NOT NULL
+  `status` enum('pending','completed','unpaid') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `payments`
+--
+
+INSERT INTO `payments` (`id`, `student_id`, `amount`, `payment_date`, `file`, `description`, `status`) VALUES
+(5, 27, 1700000.00, '2024-12-19 15:05:00', '../uploads/payments/images.png', 'coba 2', 'completed'),
+(9, 27, 1700000.00, '2024-12-19 15:15:28', '../uploads/payments/images.png', 'coba 2', 'pending'),
+(10, 27, 1700000.00, '2024-12-19 15:15:32', '../uploads/payments/images.png', 'coba 2', 'pending'),
+(11, 27, 1700000.00, '2024-12-19 15:16:48', '../uploads/payments/images.png', 'coba 2', 'pending'),
+(12, 27, 1700000.00, '2024-12-19 15:17:54', '../uploads/payments/images.png', 'coba 2', 'pending'),
+(13, 28, 3200000.00, '2024-12-19 15:39:53', '../uploads/payments/images.png', 'tes4 bAYAR', 'pending'),
+(14, 29, 1700000.00, '2024-12-19 15:57:47', '../uploads/payments/images.png', 'siswa1 bayar', 'completed'),
+(15, 29, 1700000.00, '2024-12-19 16:04:26', '../uploads/payments/default.png', 'siswa1', 'completed'),
+(16, 30, 3200000.00, '2024-12-19 16:10:31', '../uploads/payments/default.png', 'siswa2 bayar', 'completed');
 
 -- --------------------------------------------------------
 
@@ -185,9 +201,9 @@ CREATE TABLE `registrations` (
   `user_id` int(11) NOT NULL,
   `package_id` int(11) NOT NULL,
   `class` int(11) NOT NULL,
-  `tingkat` varchar(25) NOT NULL,
+  `tingkat` varchar(255) NOT NULL,
   `kurikulum` varchar(255) NOT NULL,
-  `start_month` int(11) NOT NULL,
+  `start_month` varchar(255) NOT NULL,
   `start_year` int(11) NOT NULL,
   `duration` int(11) NOT NULL,
   `total_harga` varchar(25) DEFAULT NULL,
@@ -199,8 +215,10 @@ CREATE TABLE `registrations` (
 --
 
 INSERT INTO `registrations` (`registration_id`, `user_id`, `package_id`, `class`, `tingkat`, `kurikulum`, `start_month`, `start_year`, `duration`, `total_harga`, `created_at`) VALUES
-(1, 26, 1, 3, '0', 'Kurikulum 2013', 0, 2025, 3, '1700000', '2024-12-18 23:45:18'),
-(2, 25, 1, 7, '0', 'Kurikulum 2018', 0, 2025, 6, '3200000', '2024-12-18 23:46:48');
+(1, 27, 1, 1, 'SD', 'Kurikulum 2018', 'Januari', 2024, 3, '1700000', '2024-12-19 21:18:33'),
+(12, 28, 1, 11, 'SMA', 'Kurikulum 2018', 'Januari', 2025, 6, '3200000', '2024-12-19 22:39:26'),
+(13, 29, 1, 12, 'SMA', 'Kurikulum 2013', 'Januari', 2025, 3, '1700000', '2024-12-19 22:56:16'),
+(14, 30, 1, 8, 'SMP', 'Kurikulum 2018', 'Januari', 2025, 6, '3200000', '2024-12-19 23:10:01');
 
 -- --------------------------------------------------------
 
@@ -278,7 +296,10 @@ INSERT INTO `users` (`id`, `username`, `password`, `role_id`, `created_id`, `ema
 (23, 'guru1', '2770c78f51bb70e3e1e4271378c633eb06c94bc359198c208531950fb8f61900', 2, '2024-12-17 22:43:18', 'guru1@gmail.com', '3123123', NULL, NULL, NULL, 'guru1', NULL),
 (24, 'guru2', 'c05478aad2f526db2dce958e2d2fac973a8755129a45aa016eb7d3ee287c98e0', 2, '2024-12-17 22:44:46', 'guru2@gmail.com', '33123213', NULL, NULL, NULL, 'guru2', NULL),
 (25, 'tes3', '75ad39c365275e0247c1ca868d4b0b56f8c1f2300a414615d3bef65c2f98ccef', 1, '2024-12-18 22:31:56', 'tes3@gmail.com', '1232132', '53', '5301', '5301022', 'tes3', 0),
-(26, 'tes4', '4d87ff3759e450e5a8e282f891c0d6c62de7abc1f3557b5693729f308e8b1d7c', 1, '2024-12-18 22:50:30', 'tes4@gmail.com', '312312', '32', '3215', '3215112', 'tes4', 0);
+(27, 'tes5', 'fdd653904cdc28c99d458d9667f29137bcedec0f4c52033346352eab42f7b26e', 1, '2024-12-19 20:49:33', 'tes5@gmail.com', '321312312', '18', '1871', '1871091', 'tes5', 0),
+(28, 'tes4', '4d87ff3759e450e5a8e282f891c0d6c62de7abc1f3557b5693729f308e8b1d7c', 1, '2024-12-19 22:37:26', 'tes4@gmail.com', '213123123', '64', '6401', '6401080', 'tes4 alamat', 0),
+(29, 'siswa1', 'a102282b5ba22d361d85d002db1bb5f2435d098ba2eff3888cbb2737ee4da1b5', 1, '2024-12-19 22:55:49', 'siswa1@gmail.com', '3123123', '32', '3215', '3215112', 'siswa1', 0),
+(30, 'siswa2', '152468b70af86c106c94e5c10c810b4f39295162fe3242cfd1c34778d428228c', 1, '2024-12-19 23:09:45', 'siswa2@gmail.com', '08435345', '32', '3215', '3215113', 'siswa2', 0);
 
 -- --------------------------------------------------------
 
@@ -443,13 +464,13 @@ ALTER TABLE `paket_belajar`
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `registrations`
 --
 ALTER TABLE `registrations`
-  MODIFY `registration_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `registration_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `student_courses`
@@ -467,7 +488,7 @@ ALTER TABLE `teachers`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT for table `users_role`

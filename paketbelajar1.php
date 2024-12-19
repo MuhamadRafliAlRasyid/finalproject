@@ -23,15 +23,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $total_harga = ($price_per_month * $lama) + $registration_fee;
 
     // Insert data ke database
-    $query = "INSERT INTO registrations 
-        (user_id, package_id, class, tingkat, kurikulum, start_month, start_year, duration, total_harga) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $query = "INSERT INTO registrations (user_id, package_id, class, tingkat, kurikulum, start_month, start_year, duration, total_harga, created_at) 
+              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())";
     $stmt = $db->prepare($query);
-    $stmt->bind_param("iiiisssis", 
-        $user_id, $package_id, $kelas, $tingkat, $kurikulum, $bulan, $tahun, $lama, $total_harga);
+    $stmt->bind_param(
+        "iiisssiii",  // Format data
+        $user_id, 
+        $package_id, 
+        $kelas, 
+        $tingkat, 
+        $kurikulum, 
+        $bulan, 
+        $tahun, 
+        $lama, 
+        $total_harga
+    );
 
     if ($stmt->execute()) {
-        echo "<script>alert('Data berhasil disimpan!'); window.location.href='paketbelajar1.php';</script>";
+        echo "<script>alert('Data berhasil disimpan!'); window.location.href='pembayaran.php';</script>";
+        header("Location: siswa/pembayaran.php");
     } else {
         echo "<script>alert('Gagal menyimpan data: " . $stmt->error . "');</script>";
     }

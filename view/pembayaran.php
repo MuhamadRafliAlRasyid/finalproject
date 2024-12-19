@@ -1,6 +1,32 @@
 <?php
 // Include file auth.php
 require_once '../session.php';
+include "../service/database.php";
+
+// Update status jika ada request POST
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
+    $payment_id = $_POST['payment_id'];
+    $new_status = $_POST['status'];
+
+    // Update query untuk status pembayaran
+    // Update query untuk status pembayaran
+$query = "UPDATE payments SET status = 'completed' WHERE id = ?";
+$stmt = $db->prepare($query);
+$stmt->bind_param("i", $payment_id); // Bind only the payment_id, as 'completed' is now hardcoded.
+
+if ($stmt->execute()) {
+    echo "<script>alert('Status berhasil diperbarui!'); window.location.href='pembayaran.php';</script>";
+} else {
+    echo "<script>alert('Gagal memperbarui status: " . $stmt->error . "');</script>";
+}
+
+$stmt->close();
+
+}
+
+// Fetch data dari tabel payments
+$query = "SELECT id, student_id, amount, payment_date, file, description, status FROM payments";
+$result = $db->query($query);
 
 // Periksa apakah sudah login
 checkLogin();
@@ -291,32 +317,35 @@ echo "Selamat datang, Admin " . $_SESSION['username'];
                     </tr>
                 </thead>
                 <tbody>
+            <?php if ($result->num_rows > 0): ?>
+                <?php while ($row = $result->fetch_assoc()): ?>
                     <tr>
-                        <td>John Doe</td>
-                        <td>Web Development</td>
-                        <td>01/10/2024</td>
-                        <td>Rp 1.000.000</td>
-                        <td><span class="status-paid">Lunas</span></td>
-                        
+                        <td><?= $row['id'] ?></td>
+                        <td><?= $row['student_id'] ?></td>
+                        <td><?= number_format($row['amount'], 2) ?></td>
+                        <td><?= $row['payment_date'] ?></td>
+                        <td><a href="<?= $row['file'] ?>" target="_blank">View File</a></td>
+                        <td><?= $row['description'] ?></td>
+                        <td><?= $row['status'] ?></td>
+                        <td>
+                            <?php if ($row['status'] === 'pending'): ?>
+                                <form method="POST" style="display:inline;">
+                                    <input type="hidden" name="payment_id" value="<?= $row['id'] ?>">
+                                    <input type="hidden" name="status" value="completed">
+                                    <button type="submit" name="update_status">Mark as Completed</button>
+                                </form>
+                            <?php else: ?>
+                                Completed
+                            <?php endif; ?>
+                        </td>
                     </tr>
-                    <tr>
-                        <td>Jane Smith</td>
-                        <td>Mobile Development</td>
-                        <td>02/10/2024</td>
-                        <td>Rp 1.000.000</td>
-                        <td><span class="status-unpaid">Belum Lunas</span></td>
-                       
-                    </tr>
-                    <tr>
-                        <td>Michael Johnson</td>
-                        <td>Web Design</td>
-                        <td>03/10/2024</td>
-                        <td>Rp 1.000.000</td>
-                        <td><span class="status-paid">Lunas</span></td>
-                        
-                    </tr>
-                    <!-- Tambahkan data pembayaran lainnya di sini -->
-                </tbody>
+                <?php endwhile; ?>
+            <?php else: ?>
+                <tr>
+                    <td colspan="8">No payments found</td>
+                </tr>
+            <?php endif; ?>
+        </tbody>
             </table>
         </div>
     </div>

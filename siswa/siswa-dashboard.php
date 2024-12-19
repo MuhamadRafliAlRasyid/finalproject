@@ -140,9 +140,9 @@ require_once '../session.php';
             </a>
         </li>
         <li>
-            <a href="../paketbelajar.php">
+            <a href="pembayaran.php">
                 <i class='bx bxs-group'></i>
-                <span class="text">paket belajar</span>
+                <span class="text">pembayaran</span>
             </a>
         </li>
     </ul>

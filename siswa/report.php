@@ -107,6 +107,12 @@
                 <span class="text">Report</span>
             </a>
         </li>
+        <li>
+            <a href="pembayaran.php">
+                <i class='bx bxs-group'></i>
+                <span class="text">pembayaran</span>
+            </a>
+        </li>
     </ul>
     <ul class="side-menu top">
         <li>

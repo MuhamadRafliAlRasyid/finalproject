@@ -11,7 +11,7 @@ if (!isset($_SESSION['user_id'])) {
 $user_id = $_SESSION['user_id'];
 $username = $_SESSION['username'];
 $email = isset($_SESSION['email']) ? $_SESSION['email'] : 'Tidak Ada';
-$role = $_SESSION['role'];
+$role = isset($_SESSION['role']) ? $_SESSION['role'] : 'guest'; // Nilai default 'guest'
 
 // Fungsi untuk mengecek login
 function checkLogin() {
@@ -51,7 +51,7 @@ function getUserData() {
         'user_id' => $_SESSION['user_id'],
         'username' => $_SESSION['username'],
         'email' => isset($_SESSION['email']) ? $_SESSION['email'] : '',
-        'role' => $_SESSION['role'],
+        'role' => isset($_SESSION['role']) ? $_SESSION['role'] : 'guest',
     ];
 }
 
