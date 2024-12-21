@@ -1,74 +1,61 @@
 <?php
 require_once '../session.php';
-include "../service/database.php";
 
 // Ambil user_id dari sesi
 $user_id = $_SESSION['user_id'];
 
 // Jika form pembayaran dikirim
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $registration_id = $_POST['registration_id'];
-    $user_id = $_POST['user_id'];
-    $amount = $_POST['amount'];
+    $registration_id = $_POST['registration_id']; // ID registrasi yang akan diperbarui
+    $user_id = $_SESSION['user_id'];
     $description = $_POST['description'];
 
-    // Handle file upload
+    // File upload
     $file = $_FILES['file']['name'];
     $target_dir = "../uploads/payments/";
     $target_file = $target_dir . basename($file);
 
     if (move_uploaded_file($_FILES['file']['tmp_name'], $target_file)) {
-        // Gunakan prepared statement untuk menghindari SQL injection
-        $stmt = $db->prepare("INSERT INTO payments (student_id, amount, description, file, status) VALUES (?, ?, ?, ?, 'pending')");
-        $stmt->bind_param("iiss", $user_id, $amount, $description, $target_file);
+        // Update data di tabel payments
+        $stmt = $db->prepare("
+            UPDATE payments 
+            SET file = ?, description = ?, status = 'pending' 
+            WHERE registration_id = ? AND student_id = ?
+        ");
+        $stmt->bind_param("ssii", $target_file, $description, $registration_id, $user_id);
 
         if ($stmt->execute()) {
-            echo "Payment recorded successfully!";
-            header('Location: siswa-dashboard.php');
-            exit;
+            echo "<script>alert('Pembayaran berhasil diproses.'); window.location.href = 'pembayaran.php';</script>";
         } else {
             echo "Error: " . $stmt->error;
         }
         $stmt->close();
     } else {
-        echo "File upload failed!";
+        echo "Gagal mengunggah file!";
     }
 }
 
 // Query untuk mendapatkan data registrasi dan status pembayaran
-$sql = "
-    SELECT  
-        r.registration_id, 
-        r.class, 
-        r.total_harga, 
-        CASE 
-            WHEN p.status = 'completed' THEN 'Lunas'
-            WHEN p.status = 'pending' THEN 'Menunggu'
-            ELSE 'Belum Bayar'
-        END AS payment_status
-    FROM registrations r
-    LEFT JOIN (
-        SELECT 
-            student_id, 
-            MAX(CASE 
-                WHEN status = 'completed' THEN 3
-                WHEN status = 'pending' THEN 2
-                ELSE 1 
-            END) AS priority_status,
-            MAX(status) AS status
-        FROM payments
-        GROUP BY student_id
-    ) p ON r.registration_id = p.student_id
-    WHERE r.user_id = ?;
+$query = "
+    SELECT p.registration_id, r.class, p.amount, 
+           CASE 
+               WHEN p.status = 'completed' THEN 'Lunas'
+               WHEN p.status = 'pending' THEN 'Menunggu'
+               ELSE 'Belum Bayar'
+           END AS payment_status
+    FROM payments p
+    JOIN registrations r ON p.registration_id = r.registration_id
+    WHERE p.student_id = ?
 ";
 
-
-// Gunakan prepared statement untuk query
-$stmt = $db->prepare($sql);
+$stmt = $db->prepare($query);
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $result = $stmt->get_result();
+
+// Gunakan prepared statement untuk query
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -275,66 +262,74 @@ $result = $stmt->get_result();
     </style>
 </head>
 <body>
-<section id="sidebar">
-    <a href="#" class="brand">
-        <img src="../img/BIMBELRAHMA.png" alt="Logo Bimbel Rahma" style="width: 80%; height: auto;">
-    </a>
-    <ul class="side-menu top">
-        <li class="active">
-            <a href="siswa-dashboard.php"><i class='bx bxs-dashboard'></i><span class="text">Dashboard</span></a>
-        </li>
-        <li><a href="kelasku.php"><i class='bx bxs-group'></i><span class="text">Kelasku</span></a></li>
-        <li><a href="report.php"><i class='bx bxs-bar-chart'></i><span class="text">Report</span></a></li>
-        <li><a href="pembayaran.php"><i class='bx bxs-wallet'></i><span class="text">Pembayaran</span></a></li>
-        <li><a href="../view/setting-profile.php"><i class='bx bxs-cog'></i><span class="text">Setting Profile</span></a></li>
-        <li><a href="../logout.php" class="logout" onclick="return confirmLogout()"><i class='bx bxs-log-out-circle'></i><span class="text">Logout</span></a></li>
-    </ul>
-</section>
-
 <main>
+<section id="sidebar">
+        <a href="#" class="brand">
+            <img src="../img/BIMBELRAHMA.png" alt="Logo Bimbel Rahma" style="width: 80%; height: auto; margin-top: auto;">
+        </a>
+        
+        <ul class="side-menu top">
+            <li>
+                <a href="../view/setting-profile.php">
+                    <i class='bx bxs-cog'></i>
+                    <span class="text">Setting Profiles</span>
+                </a>
+            </li>
+            <li>
+                <a href="../logout.php" class="logout" onclick="return confirmLogout()">
+                    <i class='bx bxs-log-out-circle'></i>
+                    <span class="text">Logout</span>
+                </a>
+            </li>
+        </ul>
+    </section>
     <h2 class="mb-4">Daftar Registrasi dan Status Pembayaran</h2>
-    <table class="table table-striped table-hover">
-        <thead class="table-dark">
-            <tr>
-                <th>ID Registrasi</th>
-                <th>Kelas</th>
-                <th>Total Harga</th>
-                <th>Status Pembayaran</th>
-                <th>Aksi</th>
-            </tr>
-        </thead>
-        <tbody>
-    <?php if ($result->num_rows > 0): ?>
-        <?php while ($row = $result->fetch_assoc()): ?>
-            <tr>
-                <td><?= $row['registration_id'] ?></td>
-                <td><?= $row['class'] ?></td>
-                <td><?= number_format($row['total_harga'], 2) ?></td>
-                <td>
-                    <span class="badge <?= $row['payment_status'] == 'Lunas' ? 'bg-success' : ($row['payment_status'] == 'Menunggu' ? 'bg-warning' : 'bg-danger') ?>">
-                        <?= $row['payment_status'] ?>
-                    </span>
-                </td>
-                <td>
-                    <?php if ($row['payment_status'] == 'Lunas'): ?>
-                        <button class="btn btn-secondary btn-sm" disabled>Lunas</button>
-                    <?php else: ?>
-                        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#paymentModal" 
-                            onclick="setPaymentDetails(<?= $row['registration_id'] ?>, <?= $row['total_harga'] ?>, <?= $user_id ?>)">
-                            Bayar
-                        </button>
-                    <?php endif; ?>
-                </td>
-            </tr>
-        <?php endwhile; ?>
-    <?php else: ?>
-        <tr>
-            <td colspan="5" class="text-center">Tidak ada data registrasi ditemukan.</td>
-        </tr>
-    <?php endif; ?>
-</tbody>
-
-    </table>
+        <table class="table table-striped table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>No</th>
+                    <th>Kelas</th>
+                    <th>Total Harga</th>
+                    <th>Status Pembayaran</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if ($result->num_rows > 0): ?>
+                    <?php while ($row = $result->fetch_assoc()): ?>
+                        <tr>
+                            <td><?= $row['registration_id'] ?></td>
+                            <td><?= $row['class'] ?? 'Tidak Ada' ?></td>
+                            <td><?= number_format($row['amount'] ?? 0, 2) ?></td>
+                            <td>
+                                <span class="badge <?= $row['payment_status'] == 'Lunas' ? 'bg-success' : ($row['payment_status'] == 'Menunggu' ? 'bg-warning' : 'bg-danger') ?>">
+                                    <?= $row['payment_status'] ?>
+                                </span>
+                            </td>
+                            <td>
+                                <?php if ($row['payment_status'] == 'Lunas'): ?>
+                                    <button class="btn btn-secondary btn-sm" disabled>Lunas</button>
+                                <?php elseif ($row['payment_status'] == 'Menunggu'): ?>
+                                    <button class="btn btn-warning btn-sm" disabled>Pending</button>
+                                <?php else: ?>
+                                    <button 
+                                        class="btn btn-primary btn-sm" 
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#paymentModal" 
+                                        onclick="setPaymentDetails(<?= $row['registration_id'] ?>, <?= $row['amount'] ?? 0 ?>, <?= $user_id ?>)">
+                                        Bayar
+                                    </button>
+                                <?php endif; ?>
+                            </td>
+                        </tr>
+                    <?php endwhile; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="5" class="text-center">Tidak ada data registrasi ditemukan.</td>
+                    </tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
 </main>
 
 <div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
@@ -348,18 +343,27 @@ $result = $stmt->get_result();
                 <form id="paymentForm" enctype="multipart/form-data" method="POST" action="">
                     <input type="hidden" id="registrationId" name="registration_id">
                     <input type="hidden" id="userId" name="user_id">
+                    
                     <div class="mb-3">
                         <label for="paymentAmount" class="form-label">Jumlah Pembayaran</label>
                         <input type="number" class="form-control" id="paymentAmount" name="amount" readonly>
                     </div>
+                    
+                    <div class="mb-3">
+                        <label for="rekening" class="form-label">Rekening BCA</label>
+                        <input type="text" class="form-control" id="rekening" value="0888128" name="rekening" readonly>
+                    </div>
+                    
                     <div class="mb-3">
                         <label for="paymentDetails" class="form-label">Detail Pembayaran</label>
                         <textarea class="form-control" id="paymentDetails" name="description" rows="3"></textarea>
                     </div>
+                    
                     <div class="mb-3">
                         <label for="uploadFile" class="form-label">Upload Bukti Pembayaran</label>
                         <input type="file" class="form-control" id="uploadFile" name="file" required>
                     </div>
+                    
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
             </div>
@@ -374,6 +378,7 @@ $result = $stmt->get_result();
         document.getElementById('userId').value = userId;
     }
 </script>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>

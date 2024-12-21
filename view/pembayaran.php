@@ -1,7 +1,6 @@
 <?php
 // Include file auth.php
 require_once '../session.php';
-include "../service/database.php";
 
 // Update status jika ada request POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {

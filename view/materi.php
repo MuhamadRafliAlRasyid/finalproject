@@ -1,6 +1,5 @@
 <?php
 // Include file database.php
-require_once '../service/database.php';
 
 // Include file session.php
 require_once '../session.php';

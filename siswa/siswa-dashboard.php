@@ -1,6 +1,6 @@
 <?php
 require_once '../session.php';
-
+ checkPayments();
 // Tampilkan data pengguna
 ?>
 
@@ -137,12 +137,6 @@ require_once '../session.php';
             <a href="report.php">
                 <i class='bx bxs-group'></i>
                 <span class="text">Report</span>
-            </a>
-        </li>
-        <li>
-            <a href="pembayaran.php">
-                <i class='bx bxs-group'></i>
-                <span class="text">pembayaran</span>
             </a>
         </li>
     </ul>

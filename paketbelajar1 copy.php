@@ -1,60 +1,54 @@
 <?php
 require_once 'session.php';
+include "service/database.php";
 
+// Simulasi session user_id
 $user_id = $_SESSION['user_id'] ?? 1; // Default user_id jika session kosong
+
+// Tetapkan package_id ke 1
 $package_id = 1;
 
+// Proses form jika disubmit
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $bulan = $_POST['bulan'];
-    $tahun = $_POST['tahun'];
-    $lama = $_POST['lama'];
-    $tingkat = $_POST['tingkat'];
-    $kelas = $_POST['kelas'];
-    $kurikulum = $_POST['kurikulum'];
+    $bulan = $_POST['bulan'];         // start_month
+    $tahun = $_POST['tahun'];         // start_year
+    $lama = $_POST['lama'];           // duration
+    $tingkat = $_POST['tingkat'];     // tingkat
+    $kelas = $_POST['kelas'];         // class
+    $kurikulum = $_POST['kurikulum']; // kurikulum
 
+    // Perhitungan total harga
     $price_per_month = 500000;
     $registration_fee = 200000;
     $total_harga = ($price_per_month * $lama) + $registration_fee;
 
-    $query = "
-        INSERT INTO registrations (user_id, package_id, class, tingkat, kurikulum, start_month, start_year, duration, total_harga, created_at) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())
-    ";
+    // Insert data ke database
+    $query = "INSERT INTO registrations (user_id, package_id, class, tingkat, kurikulum, start_month, start_year, duration, total_harga, created_at) 
+              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())";
     $stmt = $db->prepare($query);
-    $stmt->bind_param("iiisssiii", $user_id, $package_id, $kelas, $tingkat, $kurikulum, $bulan, $tahun, $lama, $total_harga);
+    $stmt->bind_param(
+        "iiisssiii",  // Format data
+        $user_id, 
+        $package_id, 
+        $kelas, 
+        $tingkat, 
+        $kurikulum, 
+        $bulan, 
+        $tahun, 
+        $lama, 
+        $total_harga
+    );
 
     if ($stmt->execute()) {
-        $registration_id = $stmt->insert_id;
-
-        if ($registration_id > 0) {
-            $amount = $total_harga;
-            $description = "";
-            $target_file = '';
-
-            $payment_query = "
-                INSERT INTO payments (registration_id, student_id, amount, description, file, status) 
-                VALUES (?, ?, ?, ?, ?, 'unpaid')
-            ";
-            $payment_stmt = $db->prepare($payment_query);
-            $payment_stmt->bind_param("iiiss", $registration_id, $user_id, $amount, $description, $target_file);
-
-            if ($payment_stmt->execute()) {
-                echo "<script>alert('Data berhasil disimpan dan pembayaran diproses!'); window.location.href='siswa/pembayaran.php';</script>";
-            } else {
-                echo "<script>alert('Gagal menyimpan data pembayaran: " . $payment_stmt->error . "');</script>";
-            }
-            $payment_stmt->close();
-        }
+        echo "<script>alert('Data berhasil disimpan!'); window.location.href='pembayaran.php';</script>";
+        header("Location: siswa/pembayaran.php");
     } else {
-        echo "<script>alert('Gagal menyimpan data pendaftaran: " . $stmt->error . "');</script>";
+        echo "<script>alert('Gagal menyimpan data: " . $stmt->error . "');</script>";
     }
-
     $stmt->close();
     $db->close();
 }
 ?>
-
-
 
 
 

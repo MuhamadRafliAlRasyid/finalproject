@@ -1,7 +1,6 @@
 <?php
 // Include file auth.php
 require_once '../session.php';
-include "../service/database.php";
 // Periksa apakah sudah login
 checkLogin();
 

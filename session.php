@@ -1,4 +1,5 @@
 <?php
+include "service/database.php";
 session_start();
 
 // Redirect jika belum login
@@ -20,6 +21,48 @@ function checkLogin() {
         exit();
     }
 }
+function checkPayments() {
+    global $db;
+
+    // Pastikan session sudah berjalan
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+
+    if (!isset($_SESSION['user_id'])) {
+        header("Location: ../login.php");
+        exit;
+    }
+
+    $user_id = $_SESSION['user_id'];
+    $sql = "SELECT status FROM payments WHERE student_id = ?";
+    $stmt = $db->prepare($sql);
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $status = $row['status'];
+
+        // Redirect hanya jika diperlukan
+        $currentPage = basename($_SERVER['PHP_SELF']);
+
+        if ($status === 'completed' && $currentPage !== 'siswa-dashboard.php') {
+            header("Location: siswa-dashboard.php");
+            exit;
+        } elseif (($status === 'pending' || $status === 'unpaid') && $currentPage !== 'pembayaran.php') {
+            header("Location: pembayaran.php");
+            exit;
+        }
+    } else {
+        // Jika tidak ada catatan pembayaran, arahkan ke pembayaran
+        header("Location: pembayaran.php");
+        exit;
+    }
+}
+
+
 
 // Fungsi untuk mengecek role
 function checkRole($allowed_roles = []) {
